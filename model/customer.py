@@ -1,16 +1,15 @@
-import uuid
 from model.ticket import Ticket
+from model.user import User
 
 
-class Customer:
-    def __init__(self, nome) -> None:
-        self._id = uuid.uuid4()
-        self._nome = nome
+class Customer(User):
+    def __init__(self, nome, username, password) -> None:
+        super().__init__(nome, username, password)
         self._tickets = {}
 
     def buy_ticket(self, event, quantity):
-        if (quantity <= event.available_tickets):
-            if event.name in self._tickets:
+        if quantity <= event.available_tickets:
+            if event.name not in self._tickets:
                 self._tickets[event.name] = []
             for i in range(0, quantity):
                 ticket = Ticket(event=event, owner=self)

@@ -3,12 +3,13 @@ import uuid
 
 class Event:
 
-    def __init__(self, name, size, price) -> None:
+    def __init__(self, name, size, price, owner) -> None:
         self._id = uuid.uuid4()
         self._name = name
         self._size = size
         self._price = price
         self._tickets = []
+        self._owner = owner
 
     @property
     def name(self):
