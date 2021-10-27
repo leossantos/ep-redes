@@ -12,6 +12,10 @@ class Event:
         self._owner = owner
 
     @property
+    def id(self):
+        return self._id
+
+    @property
     def name(self):
         return self._name
 
