@@ -46,7 +46,7 @@ class Message:
 
     def _write(self):
         if self._send_buffer:
-            print("sending", repr(self._send_buffer), "to", self.addr)
+            # print("sending", repr(self._send_buffer), "to", self.addr)
             try:
                 # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
@@ -68,7 +68,7 @@ class Message:
         return obj
 
     def _create_message(
-        self, *, content_bytes, content_type, content_encoding
+            self, *, content_bytes, content_type, content_encoding
     ):
         jsonheader = {
             "byteorder": sys.byteorder,
@@ -85,13 +85,13 @@ class Message:
         content = self.response
         action = content.get("action")
         result = content.get("result")
-        if action == "login":
-            self.session = result.get("session_id")
-        print(f"got result: {result}")
+        # if action in ("sign in", "sign uṕ"):
+        #     self.session = result.get("session_id")
+        # print(f"got result: {result}")
 
     def _process_response_binary_content(self):
         content = self.response
-        print(f"got response: {repr(content)}")
+        # print(f"got response: {repr(content)}")
 
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
@@ -125,7 +125,7 @@ class Message:
                 self._set_selector_events_mask("r")
 
     def close(self):
-        print("closing connection to", self.addr)
+        # print("closing connection to", self.addr)
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
@@ -181,10 +181,10 @@ class Message:
             )
             self._recv_buffer = self._recv_buffer[hdrlen:]
             for reqhdr in (
-                "byteorder",
-                "content-length",
-                "content-type",
-                "content-encoding",
+                    "byteorder",
+                    "content-length",
+                    "content-type",
+                    "content-encoding",
             ):
                 if reqhdr not in self.jsonheader:
                     raise ValueError(f'Missing required header "{reqhdr}".')
@@ -198,15 +198,15 @@ class Message:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.response = self._json_decode(data, encoding)
-            print("received response", repr(self.response), "from", self.addr)
+            # print("received response", repr(self.response), "from", self.addr)
             self._process_response_json_content()
         else:
             # Binary or unknown content-type
             self.response = data
-            print(
-                f'received {self.jsonheader["content-type"]} response from',
-                self.addr,
-            )
+            # print(
+            #     f'received {self.jsonheader["content-type"]} response from',
+            #     self.addr,
+            # )
             self._process_response_binary_content()
         # Close when response has been processed
         self.close()

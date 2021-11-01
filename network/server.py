@@ -21,12 +21,27 @@ class Server:
         event = Event(name, size, price, owner)
         self._events[event.id] = event
 
-    def login(self, username, password):
+    def sign_in(self, username, password):
         for user_id, user in self._users.items():
             if user.username == username and user.password == password:
-                print(type(user))
                 session_id = uuid.uuid4()
                 user_type = 'customer' if type(user) == Customer else 'admin'
                 self._sessions[session_id] = user
                 return {'session_id': session_id.int, 'user_type': user_type, 'name': user.name}
         return None
+
+    def sign_up(self, username, password, name, user_type):
+        if username in self._users:
+            return None
+        if user_type == 'admin':
+            user = Admin(username, name, password)
+        else:
+            user = Customer(username, password, name)
+        session_id = uuid.uuid4()
+        self._sessions[session_id] = user
+        self._users[user.id] = user
+        return {'session_id': session_id.int, 'user_type': user_type, 'name': user.name}
+
+    def username_exists(self, username):
+        return
+

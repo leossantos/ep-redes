@@ -90,12 +90,19 @@ class Message:
 
     def _create_response_json_content(self):
         action = self.request.get("action")
-        if action == 'login':
-            query = ast.literal_eval(self.request.get("value"))
+        query = ast.literal_eval(self.request.get("value"))
+        if action in 'sign in':
             username = query.get("username")
             password = query.get("password")
-            session_data = self.server.login(username, password)
-            content = {"action": "login", "result": session_data}
+            session_data = self.server.sign_in(username, password)
+            content = {"action": "sign in", "result": session_data}
+        elif action == 'sign up':
+            username = query.get("username")
+            password = query.get("password")
+            name = query.get("name")
+            user_type = query.get("user_type")
+            session_data = self.server.sign_up(username, password, name, user_type)
+            content = {"action": "sign up", "result": session_data}
         else:
             content = {"result": f'Error: invalid action "{action}".'}
         content_encoding = "utf-8"

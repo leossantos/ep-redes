@@ -3,8 +3,8 @@ from model.user import User
 
 
 class Customer(User):
-    def __init__(self, nome, username, password) -> None:
-        super().__init__(nome, username, password)
+    def __init__(self, username, password, name) -> None:
+        super().__init__(name, username, password)
         self._tickets = {}
 
     def buy_ticket(self, event, quantity):

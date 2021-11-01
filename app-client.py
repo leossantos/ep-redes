@@ -1,77 +1,57 @@
-import sys
-import socket
-import selectors
-import traceback
-import json
-
-from network.libclient import Message
-
-sel = selectors.DefaultSelector()
+from network.utils import send_message
+from network.client import Client
+from view.admin import AdminView
 
 
-def create_request(action, value):
-    if action in ("search", "login"):
-        return dict(
-            type="text/json",
-            encoding="utf-8",
-            content=dict(action=action, value=value),
-        )
-    else:
-        return dict(
-            type="binary/custom-client-binary-type",
-            encoding="binary",
-            content=bytes(action + value, encoding="utf-8"),
-        )
+def sign_up():
+    while True:
+        username = input("Username: ")
+        name = input("Nome: ")
+        password = input("Senha: ")
+        user_type = input("Tipo de usuário(admin/cliente): ")
+        value = {"username": username, "password": password, "name": name, "user_type": user_type}
+        response = send_message("sign_up", value)
+        result = response.response.get("result")
+        if result:
+            session = result.get("session")
+            user_type = result.get("user_type")
+            name = result.get("name")
+            print("Cadastro realizado com sucesso")
+            return Client(session, user_type, name)
+        print("Username já existente!!")
 
 
-def start_connection(host, port, request):
-    addr = (host, port)
-    print("starting connection to", addr)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setblocking(False)
-    sock.connect_ex(addr)
-    events = selectors.EVENT_READ | selectors.EVENT_WRITE
-    message = Message(sel, sock, addr, request)
-    sel.register(sock, events, data=message)
-
-
-def send_message():
-    start_connection(host, port, request)
-
-    try:
-        while True:
-            events = sel.select(timeout=1)
-            for key, mask in events:
-                message = key.data
-                try:
-                    message.process_events(mask)
-                except Exception:
-                    print(
-                        "main: error: exception for",
-                        f"{message.addr}:\n{traceback.format_exc()}",
-                    )
-                    message.close()
-            # Check for a socket being monitored to continue.
-            if not sel.get_map():
-                break
-    except KeyboardInterrupt:
-        print("caught keyboard interrupt, exiting")
-    finally:
-        sel.close()
+def sign_in():
+    while True:
+        username = input("Username: ")
+        password = input("Senha: ")
+        value = {"username": username, "password": password}
+        response = send_message("sign in", value)
+        result = response.response.get("result")
+        if result:
+            session = result.get("session")
+            user_type = result.get("user_type")
+            name = result.get("name")
+            print("Login Realizado com Sucesso!!")
+            return Client(session, user_type, name)
+        print("Username ou senhas estão incorretos!!!")
 
 
 # if len(sys.argv) != 5:
 #     print("usage:", sys.argv[0], "<host> <port> <action> <value>")
 #     sys.exit(1)
 
-host, port = sys.argv[1], int(sys.argv[2])
-action = sys.argv[3]
-request = None
-if action == 'login':
-    username = sys.argv[4]
-    password = sys.argv[5]
-    value = {"username": username, "password": password}
-    request = create_request(action, json.dumps(value))
-    send_message()
-    resp = input("Deu certo?")
-    if resp == 'Sim': sys.exit()
+host = '127.0.0.1'
+port = 65432
+registered = input("Já tem cadastro?(s/n)\n")
+
+if registered == 's':
+    client = sign_in()
+else:
+    client = sign_up()
+if client.user_type == 'admin':
+    AdminView(client)
+else:
+    pass
+
+# if resp == 'Sim': sys.exit()
