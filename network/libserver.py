@@ -103,7 +103,28 @@ class Message:
             user_type = query.get("user_type")
             session_data = self.server.sign_up(username, password, name, user_type)
             content = {"action": "sign up", "result": session_data}
+        elif action == 'create event':
+            name = query.get("name")
+            size = query.get("size")
+            price = query.get("price")
+            session_id = query.get("session_id")
+            result = self.server.create_event(name, size, price, session_id)
+            content = {"action": "create event", "result": result}
+        elif action == 'list events':
+            session_id = query.get("session_id")
+            show = query.get("show")
+            event_list = self.server.list_events(session_id, show)
+            content = {"action": "list events", "result": event_list}
+        elif action == 'update event':
+            result = self.server.update_event(query)
+            content = {"action": "update event", "result": result}
+            pass
+        elif action == 'delete event':
+            result = self.server.delete_event(query)
+            content = {"action": "delete event", "result": result}
+            pass
         else:
+            print('caiu aqui??')
             content = {"result": f'Error: invalid action "{action}".'}
         content_encoding = "utf-8"
         response = {

@@ -13,7 +13,7 @@ def sign_up():
         response = send_message("sign_up", value)
         result = response.response.get("result")
         if result:
-            session = result.get("session")
+            session = result.get("session_id")
             user_type = result.get("user_type")
             name = result.get("name")
             print("Cadastro realizado com sucesso")
@@ -29,7 +29,7 @@ def sign_in():
         response = send_message("sign in", value)
         result = response.response.get("result")
         if result:
-            session = result.get("session")
+            session = result.get("session_id")
             user_type = result.get("user_type")
             name = result.get("name")
             print("Login Realizado com Sucesso!!")
@@ -49,6 +49,7 @@ if registered == 's':
     client = sign_in()
 else:
     client = sign_up()
+print(f"{client.name}\t{client.session}")
 if client.user_type == 'admin':
     AdminView(client)
 else:

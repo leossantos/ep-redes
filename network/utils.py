@@ -7,7 +7,7 @@ from network.libclient import Message
 
 
 def create_request(action, value):
-    if action in ("sign up", "sign in"):
+    if action in ("sign up", "sign in", "create event", "list events", "update event", "delete event"):
         return dict(
             type="text/json",
             encoding="utf-8",
@@ -34,6 +34,8 @@ def start_connection(host, port, request, sel):
 
 
 def send_message(action, value):
+    host = '127.0.0.1'
+    port = 65432
     request = create_request(action, json.dumps(value))
     sel = selectors.DefaultSelector()
     response = start_connection(host, port, request, sel)
