@@ -15,6 +15,14 @@ class Customer(User):
                 ticket = Ticket(event=event, owner=self)
                 self._tickets[event.name].append(ticket)
                 event.book_ticket(ticket)
+            return True
 
         else:
-            print('Não há ingressos suficientes')
+            return False
+
+    @property
+    def tickets(self):
+        result = {}
+        for event in self._tickets:
+            result[event] = len(self._tickets[event])
+        return result

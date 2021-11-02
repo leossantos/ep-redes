@@ -41,7 +41,7 @@ class Server:
         else:
             user = Customer(username, password, name)
         session_id = uuid.uuid4()
-        self._sessions[session_id] = user
+        self._sessions[session_id.int] = user
         self._users[user.id] = user
         return {'session_id': session_id.int, 'user_type': user_type, 'name': user.name}
 
@@ -84,4 +84,15 @@ class Server:
         for event_id, event in events.items():
             result.append(event.to_dict())
         return result
+
+    def list_my_tickets(self, session_id):
+        customer = self._sessions[session_id]
+        return customer.tickets
+        pass
+
+    def buy_tickets(self, session_id, event_id, quantity):
+        customer = self._sessions[session_id]
+        event = self._events[event_id]
+        content = {"Success": customer.buy_ticket(event, quantity)}
+        return content
 

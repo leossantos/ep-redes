@@ -1,8 +1,7 @@
-import sys
 import socket
 import selectors
 import traceback
-from network.server import Server
+from controller.server import Server
 
 from network.libserver import Message
 
@@ -20,9 +19,9 @@ def accept_wrapper(sock):
 host = '127.0.0.1'
 port = 65432
 server = Server()
-server.create_user('Leonardo', 'leozin', '123', 'admin')
+server.create_user('Claudio', 'criativa', '123', 'admin')
+server.create_user('Leonardo', 'leonardo', '123', 'customer')
 lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Avoid bind() exception: OSError: [Errno 48] Address already in use
 lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 lsock.bind((host, port))
 lsock.listen()

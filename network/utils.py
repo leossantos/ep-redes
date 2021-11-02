@@ -7,18 +7,11 @@ from network.libclient import Message
 
 
 def create_request(action, value):
-    if action in ("sign up", "sign in", "create event", "list events", "update event", "delete event"):
-        return dict(
-            type="text/json",
-            encoding="utf-8",
-            content=dict(action=action, value=value),
-        )
-    else:
-        return dict(
-            type="binary/custom-client-binary-type",
-            encoding="binary",
-            content=bytes(action + value, encoding="utf-8"),
-        )
+    return dict(
+        type="text/json",
+        encoding="utf-8",
+        content=dict(action=action, value=value),
+    )
 
 
 def start_connection(host, port, request, sel):

@@ -28,9 +28,7 @@ class AdminView:
         print("Não é possível editar o preço, caso o evento já tenha realizado uma venda!")
         name = input(f"Nome ({event['name']}): ")
         size = input(f"Quantidade de ingressos ({event['size']}): ")
-        price = ''
-        if event['available_tickets'] == event['size']:
-            price = input(f"Preço ({event['price']}): ")
+        price = input(f"Preço ({event['price']}): ")
         content = {}
         if name != '':
             content['name'] = name
@@ -55,6 +53,7 @@ class AdminView:
 
     def detail_event(self, event):
         print(f"Id: {event['id']}")
+        print(f"Nome: {event['name']}")
         print(f"Quantidade de Ingressos: {event['size']}")
         print(f"Preço: {event['price']}")
         print(f"Ingressos disponíveis: {event['available_tickets']}")
@@ -82,8 +81,8 @@ class AdminView:
             i = 1
             print('0: Voltar ao menu anterior')
             for item in result:
-                print(
-                    f"{i}: {item['name']}")
+                print(f"{i}: {item['name']}")
+                i = i +1
 
             option = input("")
             if option == '0':

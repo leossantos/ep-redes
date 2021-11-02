@@ -1,6 +1,7 @@
 from network.utils import send_message
-from network.client import Client
+from controller.client import Client
 from view.admin import AdminView
+from view.customer import CustomerView
 
 
 def sign_up():
@@ -10,7 +11,7 @@ def sign_up():
         password = input("Senha: ")
         user_type = input("Tipo de usuário(admin/cliente): ")
         value = {"username": username, "password": password, "name": name, "user_type": user_type}
-        response = send_message("sign_up", value)
+        response = send_message("sign up", value)
         result = response.response.get("result")
         if result:
             session = result.get("session_id")
@@ -53,6 +54,7 @@ print(f"{client.name}\t{client.session}")
 if client.user_type == 'admin':
     AdminView(client)
 else:
+    CustomerView(client)
     pass
 
 # if resp == 'Sim': sys.exit()

@@ -118,10 +118,20 @@ class Message:
         elif action == 'update event':
             result = self.server.update_event(query)
             content = {"action": "update event", "result": result}
-            pass
         elif action == 'delete event':
             result = self.server.delete_event(query)
             content = {"action": "delete event", "result": result}
+        elif action == 'buy tickets':
+            session_id = query.get("session_id")
+            event_id = query.get("event_id")
+            quantity = query.get("quantity")
+            result = self.server.buy_tickets(session_id, event_id, quantity)
+            content = {"action": 'buy tickets', "result": result}
+            pass
+        elif action == 'list my tickets':
+            session_id = query.get("session_id")
+            result = self.server.list_my_tickets(session_id)
+            content = {"action": 'list my tickets', "result": result}
             pass
         else:
             print('caiu aqui??')
