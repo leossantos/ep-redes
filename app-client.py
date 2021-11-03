@@ -50,7 +50,6 @@ if registered == 's':
     client = sign_in()
 else:
     client = sign_up()
-print(f"{client.name}\t{client.session}")
 if client.user_type == 'admin':
     AdminView(client)
 else:

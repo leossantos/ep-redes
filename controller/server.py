@@ -76,7 +76,6 @@ class Server:
             events = {}
             for event_id, event in self._events.items():
                 if event.owner == admin:
-                    print(event_id)
                     events[event_id] = event
         else:
             events = self._events
